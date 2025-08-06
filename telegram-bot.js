@@ -11,13 +11,15 @@ bot.onText(/\/price (.+)/, async (msg, match) => {
 
   const stock = await getStockPrice(symbol);
   if (!stock) {
-    bot.sendMessage(chatId, `Не удалось найти акцию "${symbol}"`);
-    return;
+    return bot.sendMessage(chatId, `Не удалось найти акцию "${symbol}"`);
   }
 
+  await bot.sendMessage(chatId, `📈 ${symbol}: ${stock.price} ${stock.currency}\n⏳ Анализирую...`);
+
   const advice = await getRecommendation(symbol, stock.price);
-  bot.sendMessage(chatId, `📈 ${symbol}: ${stock.price} ${stock.currency}\n\n💡 Совет: ${advice}`);
+  await bot.sendMessage(chatId, `💡 Совет: ${advice}`);
 });
+
 
 bot.onText(/\/start/, (msg) => {
   bot.sendMessage(msg.chat.id, `Привет! Отправь команду /price AAPL или /price TSLA, чтобы получить совет.`);
